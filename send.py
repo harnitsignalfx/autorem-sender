@@ -23,7 +23,7 @@ usermap = {}
 hostmap = {}
 loggermap = {}
 
-filepath = './userlist'
+filepath = '/arlogs/userlist'
 
 lastTime = 0
 

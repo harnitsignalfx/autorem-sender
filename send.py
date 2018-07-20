@@ -51,7 +51,7 @@ def get_custom_logger(name):
     if name in loggermap:
       return loggermap[name]
 
-    filename = 'log-'+name+'.log'
+    filename = '/arlogs/'+'log-'+name+'.log'
     formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
                                   datefmt='%Y-%m-%d %H:%M:%S')
     handler = RotatingFileHandler(filename, mode='w',maxBytes=5000000,backupCount=3)

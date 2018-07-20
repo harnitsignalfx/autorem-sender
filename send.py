@@ -115,6 +115,7 @@ async def get_modTime():
                 if key not in usermap:
                   usermap[key]=[str(uuid.uuid4())[:13].replace('-',''),str(uuid.uuid4())[:13].replace('-',''),str(uuid.uuid4())[:13].replace('-','')]
                   hostmap[key]=[str(uuid.uuid4())[:13].replace('-',''),str(uuid.uuid4())[:13].replace('-',''),str(uuid.uuid4())[:13].replace('-','')]
+                  globalDeployTypes[key]=value
 
                 else:
                   if value != globalDeployTypes[key]:

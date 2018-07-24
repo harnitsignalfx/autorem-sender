@@ -190,7 +190,7 @@ async def printList():
 
         fakeException=fakeException1+fakeException2+fakeException3
         
-
+        loggingIteration = 0
         while(True):
             startTime = int(round(time.time()*1000))
             
@@ -233,6 +233,8 @@ async def printList():
               latencyValue2 = random.randint(80,130)
               latencyValue3 = random.randint(80,130)
 
+              bypassLogging = False
+
               if user in globalDeployTypes:
                 #pdb.set_trace()
                 if globalDeployTypes[user] == 'bcanary':
@@ -243,6 +245,9 @@ async def printList():
                   print ('in bad canary for ',user)
                   if getGlobalIterNum(user) >= 10:
                     logger.error('instance={} container={} user={} {}'.format(hostmap[user][0],usermap[user][0],user,fakeException))
+                    logger.info('Requests Processed:{} instance={} container={}'.format(value1,hostmap[user][0],usermap[user][0]))
+                    logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue1,hostmap[user][0],usermap[user][0]))
+                    bypassLogging = True
                   incrementGlobalIterNum(user)
                 elif globalDeployTypes[user] == 'gcanary':
                   dim1['canary']='true'
@@ -304,16 +309,20 @@ async def printList():
               sendList.append(latencyData2)
               sendList.append(latencyData3)
 
-              
-              logger.info('Requests Processed:{} instance={} container={}'.format(value1,dim1['host'],dim1['containerId']))
-              logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue1,dim1['host'],dim1['containerId']))
+              if (loggingIteration % 10) == 0 && bypassLogging:
+                logger.info('Requests Processed:{} instance={} container={}'.format(value1,dim1['host'],dim1['containerId']))
+                logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue1,dim1['host'],dim1['containerId']))
 
-              logger.info('Requests Processed:{} instance={} container={}'.format(value2,dim2['host'],dim2['containerId']))
-              logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue2,dim2['host'],dim2['containerId']))
+                logger.info('Requests Processed:{} instance={} container={}'.format(value2,dim2['host'],dim2['containerId']))
+                logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue2,dim2['host'],dim2['containerId']))
 
-              logger.info('Requests Processed:{} instance={} container={}'.format(value3,dim3['host'],dim3['containerId']))
-              logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue3,dim3['host'],dim3['containerId']))
-              
+                logger.info('Requests Processed:{} instance={} container={}'.format(value3,dim3['host'],dim3['containerId']))
+                logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue3,dim3['host'],dim3['containerId']))
+
+
+
+            loggingIteration += 1  
+            bypassLogging = False
             
             sfx.send(counters=sendList)
             #print('Sending..',sendList)

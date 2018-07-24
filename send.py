@@ -309,7 +309,7 @@ async def printList():
               sendList.append(latencyData2)
               sendList.append(latencyData3)
 
-              if (loggingIteration % 10) == 0 and bypassLogging:
+              if (loggingIteration % 10) == 0 and not bypassLogging:
                 logger.info('Requests Processed:{} instance={} container={}'.format(value1,dim1['host'],dim1['containerId']))
                 logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue1,dim1['host'],dim1['containerId']))
 

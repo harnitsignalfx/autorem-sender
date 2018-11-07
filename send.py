@@ -163,15 +163,24 @@ def getTrendingRequestsProcessedValue(key):
     return random.randint(lowValue,highValue)
 
 def getTrendingRequestsLatencyValue(key):
+  global usermap
+  logger = get_custom_logger(key)
   if not key in globalIterNum:
     incrementGlobalIterNum(key)
-  if globalIterNum[key]<=10:
-    return random.randint(100,130)
-  elif globalIterNum[key]>10:
-    lowValue = round(globalIterNum[key]**2.08)
-    highValue = round(globalIterNum[key]**2.08)
-    #print('lowValue:',lowValue,' highValue:',highValue)
-    return random.randint(lowValue,highValue)
+  if random.randint(0,100)%7==0:
+    logger.error('instance={} container={} user={} {}'.format(hostmap[key][0],usermap[key][0],key,getFakeException()))
+    return random.randint(3000,4000)  
+  else:
+    return random.randint(500,506)
+
+def getFakeException():
+  fakeException1='Exception in thread "main" java.lang.OutOfMemoryError: Java heap space\n\t'
+  fakeException2='at com.requests.apiHandler.ingest.capacityAllocator(CapacityAllocator.java:132)\n\t'
+  fakeException3='at com.requests.apiHandler.ingest.main(ingest.java:28)'
+  fakeException=fakeException1+fakeException2+fakeException3  
+
+  return fakeException
+
 
 
 async def printList():
@@ -184,11 +193,7 @@ async def printList():
 
         iterationNum = 0
 
-        fakeException1='Exception in thread "main" java.lang.OutOfMemoryError: Java heap space\n\t'
-        fakeException2='at com.requests.apiHandler.ingest.capacityAllocator(CapacityAllocator.java:132)\n\t'
-        fakeException3='at com.requests.apiHandler.ingest.main(ingest.java:28)'
-
-        fakeException=fakeException1+fakeException2+fakeException3
+        fakeException=getFakeException()
         
         loggingIteration = 0
         while(True):
@@ -229,9 +234,9 @@ async def printList():
               value2 = random.randint(900,1000)
               value3 = random.randint(900,1000)
 
-              latencyValue1 = random.randint(80,130)
-              latencyValue2 = random.randint(80,130)
-              latencyValue3 = random.randint(80,130)
+              latencyValue1 = random.randint(30,50)
+              latencyValue2 = random.randint(30,50)
+              latencyValue3 = random.randint(30,50)
 
               bypassLogging = False
 
@@ -244,7 +249,6 @@ async def printList():
                   latencyDim1['canary']='true'
                   print ('in bad canary for ',user)
                   if getGlobalIterNum(user) >= 10:
-                    logger.error('instance={} container={} user={} {}'.format(hostmap[user][0],usermap[user][0],user,fakeException))
                     logger.info('Requests Processed:{} instance={} container={}'.format(value1,hostmap[user][0],usermap[user][0]))
                     logger.info('Requests Latency:{} instance={} container={}'.format(latencyValue1,hostmap[user][0],usermap[user][0]))
                     bypassLogging = True

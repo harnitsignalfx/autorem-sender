@@ -167,9 +167,10 @@ def getTrendingRequestsLatencyValue(key):
   logger = get_custom_logger(key)
   if not key in globalIterNum:
     incrementGlobalIterNum(key)
-  if random.randint(0,100)%7==0:
+  # 8% chance of an error (and spike between 4 to 5s)
+  if random.randint(0,100)%12==0:
     logger.error('instance={} container={} user={} {}'.format(hostmap[key][0],usermap[key][0],key,getFakeException()))
-    return random.randint(3000,4000)  
+    return random.randint(4000,5000)  
   else:
     return random.randint(500,506)
 

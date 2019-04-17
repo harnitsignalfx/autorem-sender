@@ -40,7 +40,7 @@ else:
 
 token = os.environ['SF_TOKEN']
 #endpoint = 'https://mon-ingest.signalfx.com'
-endpoint = 'https://ingest.signalfx.com/'
+endpoint = 'https://ingest.signalfx.com'
 
 #sfx = signalfx.SignalFx().ingest(os.environ['SF_TOKEN'])
 sfx = signalfx.SignalFx().ingest(token=token,endpoint=endpoint)

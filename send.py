@@ -9,6 +9,7 @@ import pdb
 import sys
 import logging
 from logging.handlers import RotatingFileHandler
+import socket
 
 '''
 4 type of events
@@ -184,7 +185,7 @@ def getFakeException():
 
 
 
-async def printList():
+async def printList(sfx):
     try:
         metricName = 'requests.processed'
         latencyMetric = 'requests.latency'
@@ -329,7 +330,26 @@ async def printList():
             loggingIteration += 1  
             bypassLogging = False
             
-            sfx.send(counters=sendList)
+            try:
+                sfx.send(counters=sendList)
+            except socket.timeout as err:
+                print ('Socket timeout while sending datapoints ',err)
+                logger.error('Socket timeout while sending datapoints ',err)
+                print ('Stopping connection ...')
+                logger.info('Stopping connection ...')
+                sfx.stop()
+                print ('Re-creating connection ...')
+                logger.info('Re-creating connection ...')
+                sfx = signalfx.SignalFx().ingest(token=token,endpoint=endpoint)
+            except Exception as err:
+                print ('An exception occurred while sending datapoints ',err)
+                logger.error('An exception occurred while sending datapoints ',err)
+                print ('Stopping connection ...')
+                logger.info('Stopping connection ...')
+                sfx.stop()
+                print ('Re-creating connection ...')
+                logger.info('Re-creating connection ...')
+                sfx = signalfx.SignalFx().ingest(token=token,endpoint=endpoint)  
             #print('Sending..',sendList)
             endTime = int(round(time.time()*1000))
             delta = endTime-startTime
@@ -345,6 +365,6 @@ async def printList():
         sfx.stop()
 
 asyncio.ensure_future(get_modTime())
-asyncio.ensure_future(printList())
+asyncio.ensure_future(printList(sfx))
 
 content = loop.run_forever()

@@ -39,9 +39,14 @@ else:
     print('SF_TOKEN env variable not found')
     sys.exit(0)
 
+realm = 'us0'
+
+if 'REALM' in os.environ:
+    realm = os.environ['REALM']
+
 token = os.environ['SF_TOKEN']
 # endpoint = 'https://mon-ingest.signalfx.com'
-endpoint = 'https://ingest.signalfx.com'
+endpoint = 'https://ingest.'+realm+'.signalfx.com'
 
 # sfx = signalfx.SignalFx().ingest(os.environ['SF_TOKEN'])
 sfx = signalfx.SignalFx().ingest(token=token, endpoint=endpoint)

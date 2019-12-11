@@ -297,26 +297,32 @@ async def printList(sfx):
                 userData1['metric'] = metricName
                 userData1['value'] = value1
                 userData1['dimensions'] = dim1
+                userData1['timestamp'] = int(time.time()*1000)
 
                 latencyData1['metric'] = latencyMetric
                 latencyData1['value'] = latencyValue1
                 latencyData1['dimensions'] = latencyDim1
+                latencyData1['timestamp'] = int(time.time()*1000)
 
                 userData2['metric'] = metricName
                 userData2['value'] = value2
                 userData2['dimensions'] = dim2
+                userData2['timestamp'] = int(time.time()*1000)
 
                 latencyData2['metric'] = latencyMetric
                 latencyData2['value'] = latencyValue2
                 latencyData2['dimensions'] = latencyDim2
+                latencyData2['timestamp'] = int(time.time()*1000)
 
                 userData3['metric'] = metricName
                 userData3['value'] = value3
                 userData3['dimensions'] = dim3
+                userData3['timestamp'] = int(time.time()*1000)
 
                 latencyData3['metric'] = latencyMetric
                 latencyData3['value'] = latencyValue3
                 latencyData3['dimensions'] = latencyDim3
+                latencyData3['timestamp'] = int(time.time()*1000)
 
                 sendList.append(userData1)
                 sendList.append(userData2)
